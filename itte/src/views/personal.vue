@@ -13,12 +13,19 @@
         <span class="iconfont iconjiantou1"></span>
       </div>
     </router-link>
+    <mycell title='我的关注' desc='关注的用户'></mycell>
+    <mycell title='我的跟帖' desc='跟帖/回复'></mycell>
+    <mycell title='我的收藏' desc='文章/视频'></mycell>
+    <mycell title='设置' desc=''></mycell>
   </div>
 </template>
 
 <script>
+import mycell from '@/components/mycell.vue'
 export default {
-
+  components: {
+    mycell
+  }
 }
 </script>
 
