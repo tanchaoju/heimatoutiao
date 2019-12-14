@@ -9,17 +9,20 @@
       </div>
       <div class="inputs">
         <!-- <hminput
-        placeholder='请输入用户名/手机号'
-        :value='users.username'
-        @input='hanlderinput'
+        placeholder='请输入用户名或手机号码'
+        :value='user.username'
+        @input='handlerinput'
         ></hminput> -->
-        <!-- <hminput
-        placeholder='请输入用户名/手机号'
-        v-model='users.username'
+        <hminput
+        placeholder='请输入用户名或手机号码'
+        v-model='user.username'
         :rules='/^1\d{10}$/'
-        msg_err='手机号输入不合法，请输入11位手机号'
+         msg_err='手机号输入不合法，请输入11位手机号'
         ></hminput>
-        <hminput type='password' v-model="users.password"></hminput> -->
+         <hminput
+         type='password'
+         placeholder='请输入密码'
+         v-model="user.password"></hminput>
       </div>
       <p class="tips">
         没有账号？
@@ -32,13 +35,40 @@
 
 <script>
 import hmbutton from '@/components/button.vue'
+import hminput from '@/components/input.vue'
+import { userLogin } from '@/api/user.js'
 export default {
+  data () {
+    return {
+      user: {
+        username: '123',
+        password: '222'
+      }
+    }
+  },
   components: {
-    hmbutton
+    hmbutton, hminput
   },
   methods: {
-    login () {
-      console.log('1111')
+    login (event) {
+      userLogin(this.user)
+        .then(res => {
+          if (res.data.message === '登录成功') {
+            // 将当前的token存储，本地存储
+            localStorage.setItem('token', res.data.data.token)
+            // 页面跳转
+            this.$router.push({ path: `/personal/${res.data.data.user.id}` })
+          } else {
+            this.$toast.fail(res.data.message)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          this.$toast.fail('登陆失败，请重试')
+        })
+    },
+    handlerinput (data) {
+      this.user.username = data
     }
   }
 }
