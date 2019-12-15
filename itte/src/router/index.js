@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 
 import Login from '@/views/login.vue'
 import Personal from '@/views/personal.vue'
+import EditPersonal from '@/views/editPersonal.vue'
 
 // 使用use挂载
 Vue.use(VueRouter)
@@ -19,6 +20,11 @@ var router = new VueRouter({
       name: 'personal',
       path: '/personal/:id',
       component: Personal
+    },
+    {
+      name: 'editPersonal',
+      path: '/editPersonal/:id',
+      component: EditPersonal
     }
   ]
 })

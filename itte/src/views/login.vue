@@ -59,6 +59,7 @@ export default {
             // 页面跳转
             this.$router.push({ path: `/personal/${res.data.data.user.id}` })
           } else {
+            console.log('1111')
             this.$toast.fail(res.data.message)
           }
         })

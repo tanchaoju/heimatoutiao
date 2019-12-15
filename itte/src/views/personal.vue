@@ -1,42 +1,67 @@
 <template>
   <div class="personal">
-    <router-link to="/edit_profile">
+    <router-link :to="'/editPersonal/'+currentUser.id">
       <div class="profile">
         <!-- $axios.defaults.baseURL读取axios的服务器路径 -->
-        <img src="http://img1.imgtn.bdimg.com/it/u=3757784226,1202878475&fm=26&gp=0.jpg" alt />
+        <img :src="currentUser.head_img" alt />
         <div class="profile-center">
           <div class="name">
-            <span class="iconfont iconxingbienan"></span>我就是我
+            <span class="iconfont iconxingbienan"></span>{{currentUser.nickname}}
           </div>
           <div class="time">2019-9-24</div>
         </div>
         <span class="iconfont iconjiantou1"></span>
       </div>
     </router-link>
-    <mycell title='我的关注' desc='关注的用户'></mycell>
-    <mycell title='我的跟帖' desc='跟帖/回复'></mycell>
-    <mycell title='我的收藏' desc='文章/视频'></mycell>
-    <mycell title='设置' desc=''></mycell>
+    <mycell title="我的关注" desc="关注的用户"></mycell>
+    <mycell title="我的跟帖" desc="跟帖/回复"></mycell>
+    <mycell title="我的收藏" desc="文章/视频"></mycell>
+    <mycell title="设置" desc=''></mycell>
+    <hmbutton text="退出"></hmbutton>
   </div>
 </template>
 
 <script>
 import mycell from '@/components/mycell.vue'
+import hmbutton from '@/components/button.vue'
+import { getUserInfo } from '@/api/user.js'
+
 export default {
+  data () {
+    return {
+      currentUser: {}
+    }
+  },
   components: {
-    mycell
+    mycell,
+    hmbutton
+  },
+  async mounted () {
+    this.id = this.$route.params.id
+    let res = await getUserInfo(this.id)
+    console.log(res)
+    if (res.data.message === '获取成功') {
+      this.currentUser = res.data.data
+      if (res.data.data.head_img) {
+        this.currentUser.head_img = localStorage.getItem('mybaseURL') + this.currentUser.head_img
+      } else {
+        this.currentUser.head_img = localStorage.getItem('mybaseURL') + '/uploads/image/moren.jpg'
+      }
+    } else {
+      this.$toast.fail('获取数据失败')
+    }
   }
 }
 </script>
 
 <style lang='less' scoped>
-.personal{
-    width: 100vw;
-    height: 100vh;
-    background-color: #eee;
+.personal {
+  width: 100vw;
+  height: 100vh;
+  background-color: #eee;
 }
-a{
-    color: #666;
+a {
+  color: #666;
 }
 .profile {
   display: flex;
@@ -67,5 +92,8 @@ a{
     font-size: 14px;
     margin-top: 5px;
   }
+}
+.btn{
+  margin: 30px auto;
 }
 </style>

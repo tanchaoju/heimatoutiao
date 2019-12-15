@@ -1,5 +1,5 @@
 <template>
-    <div class="cell">
+    <div class="cell" @click="handlerclick">
         <div class="left">{{title}}</div>
         <div class="right">{{desc}}<span class="iconfont iconjiantou1"></span></div>
         <!-- <van-icon name="arrow" /> -->
@@ -9,7 +9,12 @@
 
 <script>
 export default {
-  props: ['title', 'desc']
+  props: ['title', 'desc'],
+  methods: {
+    handlerclick (event) {
+      this.$emit('click', event)
+    }
+  }
 }
 </script>
 
