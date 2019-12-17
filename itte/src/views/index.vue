@@ -10,8 +10,12 @@
     <van-tabs v-model="active" sticky swipeable>
       <van-tab :title="cate.name" v-for="cate in cateList" :key="cate.id">
         <!-- 上拉加载 -->
-        <van-list v-model="cate.loading" :finished="cate.finished" finished-text="没有更多了" @load="onLoad">
+        <!-- :immediate-check  List 初始化后会触发一次 load 事件，用于加载第一屏的数据 -->
+        <!-- 我们在钩子函数中设置了默认获取第一屏数据，所以会多加载一屏数据，通过:immediate-check='false'来关闭list的自动触发load -->
+        <van-list :immediate-check='false' :offset='10' v-model="cate.loading" :finished="cate.finished" finished-text="没有更多了" @load="onLoad">
+          <van-pull-refresh v-model="cate.isLoading" @refresh="onRefresh">
           <articleblock v-for="post in cate.postList" :key="post.id" :post="post"></articleblock>
+          </van-pull-refresh>
         </van-list>
       </van-tab>
     </van-tabs>
@@ -44,7 +48,8 @@ export default {
           pageSize: 5,
           postList: [], // 栏目新闻数据
           loading: false,
-          finished: false
+          finished: false,
+          isLoading: false
         }
       })
     }
@@ -63,15 +68,29 @@ export default {
       // this.cateList[this.active].postList = res.data.data
       this.cateList[this.active].postList.push(...res.data.data)
       // 获取数据后。将loading重置为false
+      // loading = true表示正在加载，当前加载未完成，不会进行下一步操作，等加载完成才可以进行下一步操作
       this.cateList[this.active].loading = false
+      // 重置isLoading,让下拉刷新的提示消失
+      this.cateList[this.active].isLoading = false
       // 判断数据是否传输完成
       if (res.data.data.length < this.cateList[this.active].pageSize) {
+        // finished = true 代表全部加载完成
         this.cateList[this.active].finished = true
       }
     },
     onLoad () {
       // 上拉加载
       this.cateList[this.active].pageIndex++
+      this.getPostList()
+    },
+    onRefresh () {
+      // 重新加载第一页的数据
+      this.cateList[this.active].pageIndex = 1
+      // 将finished重置为False，让这个栏目可以重新的上拉加载更多数据
+      this.cateList[this.active].finished = false
+      // 清除数组的所有数据，可以避免反复的创建新的数组
+      this.cateList[this.active].postList.length = 0
+      this.getPostList()
     },
     jump () {
       this.$router.push({
