@@ -35,7 +35,7 @@ var router = new VueRouter({
     },
     {
       name: 'index',
-      path: '/index',
+      path: '/',
       component: Index
     }
   ]

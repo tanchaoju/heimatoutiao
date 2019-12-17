@@ -146,6 +146,9 @@ export default {
     },
     async updateGender () {
       // console.log(this.genderIndex)
+      if (this.genderIndex === '') {
+        this.genderIndex = this.current.gender
+      }
       let res = await editUser(this.id, { gender: this.genderIndex })
       console.log(res)
       if (res.data.message === '修改成功') {

@@ -56,6 +56,8 @@ export default {
           if (res.data.message === '登录成功') {
             // 将当前的token存储，本地存储
             localStorage.setItem('token', res.data.data.token)
+            // 存储用户id
+            localStorage.setItem('myId', res.data.data.user.id)
             // 页面跳转
             this.$router.push({ path: `/personal/${res.data.data.user.id}` })
           } else {
