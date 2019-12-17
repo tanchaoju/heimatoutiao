@@ -5,14 +5,16 @@
       <div class="center">
         <van-icon name="search" />&nbsp;&nbsp;&nbsp;搜索商品
       </div>
-      <van-icon name="manager-o" class="icon" @click="jump"/>
+      <van-icon name="manager-o" class="icon" @click="jump" />
     </div>
     <van-tabs v-model="active" sticky swipeable>
       <van-tab :title="cate.name" v-for="cate in cateList" :key="cate.id">
-        <articleblock v-for='post in cate.postList' :key='post.id' :post='post'></articleblock>
+        <!-- 上拉加载 -->
+        <van-list v-model="cate.loading" :finished="cate.finished" finished-text="没有更多了" @load="onLoad">
+          <articleblock v-for="post in cate.postList" :key="post.id" :post="post"></articleblock>
+        </van-list>
       </van-tab>
     </van-tabs>
-
   </div>
 </template>
 <script>
@@ -40,7 +42,9 @@ export default {
           ...value,
           pageIndex: 1,
           pageSize: 5,
-          postList: [] // 栏目新闻数据
+          postList: [], // 栏目新闻数据
+          loading: false,
+          finished: false
         }
       })
     }
@@ -55,10 +59,24 @@ export default {
         category: this.cateList[this.active].id
       })
       // 将新闻数据存储到当前栏目的postList中，每一个栏目有一个单独的文章列表数组
-      this.cateList[this.active].postList = res.data.data
+      // 数据应该是追加而不是覆盖
+      // this.cateList[this.active].postList = res.data.data
+      this.cateList[this.active].postList.push(...res.data.data)
+      // 获取数据后。将loading重置为false
+      this.cateList[this.active].loading = false
+      // 判断数据是否传输完成
+      if (res.data.data.length < this.cateList[this.active].pageSize) {
+        this.cateList[this.active].finished = true
+      }
+    },
+    onLoad () {
+      // 上拉加载
+      this.cateList[this.active].pageIndex++
     },
     jump () {
-      this.$router.push({ path: `Personal/${window.localStorage.getItem('myId')}` })
+      this.$router.push({
+        path: `Personal/${window.localStorage.getItem('myId')}`
+      })
     }
   },
   watch: {

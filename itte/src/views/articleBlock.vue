@@ -1,5 +1,5 @@
 <template>
-  <div class="single">
+  <div class="single" @click="$router.push({path: `/articleDetail/${post.id}`})">
     <div class="left">
       <p class="content">{{post.title}}</p>
       <p class="info">

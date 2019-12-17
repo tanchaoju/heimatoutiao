@@ -7,6 +7,7 @@ import Personal from '@/views/personal.vue'
 import EditPersonal from '@/views/editPersonal.vue'
 import Register from '@/views/Register.vue'
 import Index from '@/views/index.vue'
+import ArticleDetail from '@/views/articleDetail.vue'
 
 // 使用use挂载
 Vue.use(VueRouter)
@@ -37,6 +38,11 @@ var router = new VueRouter({
       name: 'index',
       path: '/',
       component: Index
+    },
+    {
+      name: 'articleDetail',
+      path: '/articleDetail/:id',
+      component: ArticleDetail
     }
   ]
 })

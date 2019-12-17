@@ -8,3 +8,10 @@ export const getArticleList = (params) => {
     params
   })
 }
+
+// 获取文章详情数据
+export const getArticleDetail = (id) => {
+  return axios({
+    url: `/post/${id}`
+  })
+}
