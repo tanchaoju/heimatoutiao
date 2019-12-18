@@ -16,9 +16,8 @@
       <div class="content" v-html="article.content" v-if="article.type===1"></div>
       <video v-if="article.type===2" :src="article.content" controls autoplay poster='http://img4.imgtn.bdimg.com/it/u=1231851507,1502682343&fm=26&gp=0.jpg'></video>
       <div class="opt">
-        <span class="like">
-
-          <van-icon name="good-job-o" />点赞
+        <span class="like" @click="like" :class='{active:article.has_like}'>
+          <van-icon name="good-job-o"/>{{article.like_length}}
         </span>
         <span class="chat">
           <van-icon name="chat" class="w" />微信
@@ -46,7 +45,7 @@
 
 <script>
 import { getArticleDetail } from '@/api/article.js'
-import { followUser, unFollowUser } from '@/api/user.js'
+import { followUser, unFollowUser, likeArticle } from '@/api/user.js'
 export default {
   data () {
     return {
@@ -71,6 +70,17 @@ export default {
       this.$toast.success(res.data.message)
       //    this.article.has_follow取反，改变按钮状态
       this.article.has_follow = !this.article.has_follow
+    },
+    async like () {
+      let res = await likeArticle(this.article.id)
+      console.log(res)
+      this.article.has_like = !this.article.has_like
+      if (res.data.message === '点赞成功') {
+        this.article.like_length++
+      } else if (res.data.message === '取消成功') {
+        this.article.like_length--
+      }
+      this.$toast.success(res.data.message)
     }
   }
 
@@ -106,12 +116,12 @@ export default {
     text-align: center;
     border-radius: 15px;
     font-size: 13px;
-     &.active{
-        color: #fff;
-        background-color: #f00;
-    }
   }
 }
+.active{
+        color: #fff!important;
+        background-color: #f00;
+    }
 .detail {
   padding: 15px;
   .title {

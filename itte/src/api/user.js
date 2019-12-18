@@ -45,3 +45,10 @@ export const unFollowUser = (id) => {
     url: `/user_unfollow/${id}`
   })
 }
+
+// 点赞文章
+export const likeArticle = (id) => {
+  return axios({
+    url: `/post_like/${id}`
+  })
+}
