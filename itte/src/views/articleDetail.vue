@@ -5,7 +5,10 @@
         <van-icon name="arrow-left back" @click="$router.back()" />
         <span class="iconfont iconnew new"></span>
       </div>
-      <span @click="followAuthor" :class='{active:article.has_follow}'>{{article.has_follow?"已关注":"关注"}}</span>
+      <span
+        @click="followAuthor"
+        :class="{active:article.has_follow}"
+      >{{article.has_follow?"已关注":"关注"}}</span>
     </div>
     <div class="detail">
       <div class="title">{{article.title}}</div>
@@ -14,10 +17,17 @@
         <span>2019-9-9</span>
       </div>
       <div class="content" v-html="article.content" v-if="article.type===1"></div>
-      <video v-if="article.type===2" :src="article.content" controls autoplay poster='http://img4.imgtn.bdimg.com/it/u=1231851507,1502682343&fm=26&gp=0.jpg'></video>
+      <video
+        v-if="article.type===2"
+        :src="article.content"
+        controls
+        autoplay
+        poster="http://img4.imgtn.bdimg.com/it/u=1231851507,1502682343&fm=26&gp=0.jpg"
+      ></video>
       <div class="opt">
-        <span class="like" @click="like" :class='{active:article.has_like}'>
-          <van-icon name="good-job-o"/>{{article.like_length}}
+        <span class="like" @click="like" :class="{active:article.has_like}">
+          <van-icon name="good-job-o" />
+          {{article.like_length}}
         </span>
         <span class="chat">
           <van-icon name="chat" class="w" />微信
@@ -40,19 +50,24 @@
       </div>
       <div class="more">更多跟帖</div>
     </div>
+    <componentFooter :article="article"></componentFooter>
   </div>
 </template>
 
 <script>
 import { getArticleDetail } from '@/api/article.js'
 import { followUser, unFollowUser, likeArticle } from '@/api/user.js'
+import componentFooter from '@/components/component_footer.vue'
 export default {
   data () {
     return {
       article: {}
     }
   },
-  async  mounted () {
+  components: {
+    componentFooter
+  },
+  async mounted () {
     // 根据id获取文章的详情，实现文章详情的动态渲染
     let res = await getArticleDetail(this.$route.params.id)
     this.article = res.data.data
@@ -62,7 +77,8 @@ export default {
     async followAuthor () {
       let res
       // 判断当前状态是关注还是未关注
-      if (this.article.has_follow) { // 已关注
+      if (this.article.has_follow) {
+        // 已关注
         res = await unFollowUser(this.article.user.id)
       } else {
         res = await followUser(this.article.user.id)
@@ -71,9 +87,10 @@ export default {
       //    this.article.has_follow取反，改变按钮状态
       this.article.has_follow = !this.article.has_follow
     },
+    // 点赞与取消点赞
     async like () {
       let res = await likeArticle(this.article.id)
-      console.log(res)
+      // 通过has_like的取值，来决定点击之后是否添加active样式
       this.article.has_like = !this.article.has_like
       if (res.data.message === '点赞成功') {
         this.article.like_length++
@@ -83,7 +100,6 @@ export default {
       this.$toast.success(res.data.message)
     }
   }
-
 }
 </script>
 
@@ -111,17 +127,17 @@ export default {
   }
   > span {
     padding: 5px 15px;
-    border:1px solid #ccc;
+    border: 1px solid #ccc;
     color: #333;
     text-align: center;
     border-radius: 15px;
     font-size: 13px;
   }
 }
-.active{
-        color: #fff!important;
-        background-color: #f00;
-    }
+.active {
+  color: #fff !important;
+  background-color: #f00;
+}
 .detail {
   padding: 15px;
   .title {
@@ -141,9 +157,9 @@ export default {
     padding-bottom: 30px;
     width: 100%;
   }
-  video{
-      width: 100%;
-      margin-bottom: 10px;
+  video {
+    width: 100%;
+    margin-bottom: 10px;
   }
 }
 .opt {
@@ -165,7 +181,7 @@ export default {
 }
 .keeps {
   border-top: 5px solid #ddd;
-  padding: 0 15px;
+  padding: 0 15px 50px 15px;
   > h2 {
     line-height: 50px;
     text-align: center;
@@ -216,10 +232,10 @@ export default {
     font-size: 13px;
   }
 }
-/deep/.photo{
-    img {
-        width: 100%!important;
-        display: block;
-    }
+/deep/.photo {
+  img {
+    width: 100% !important;
+    display: block;
+  }
 }
 </style>
