@@ -15,3 +15,10 @@ export const getArticleDetail = (id) => {
     url: `/post/${id}`
   })
 }
+
+// 获取当前文章评论数据ArticleDetail
+export const getCommentData = (id) => {
+  return axios({
+    url: `/post_comment/${id}`
+  })
+}

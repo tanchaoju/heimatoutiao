@@ -37,16 +37,16 @@
     <!-- 精彩跟帖 -->
     <div class="keeps">
       <h2>精彩跟帖</h2>
-      <div class="item">
+      <div class="item" v-for="item in commentData" :key="item.id">
         <div class="head">
-          <img src="../assets/logo.png" alt />
+          <img :src="item.user.head_img" alt />
           <div>
-            <p>火星网友</p>
+            <p>{{item.user.nickname}}</p>
             <span>2小时前</span>
           </div>
           <span>回复</span>
         </div>
-        <div class="text">文章说得很有道理</div>
+        <div class="text">{{item.content}}</div>
       </div>
       <div class="more">更多跟帖</div>
     </div>
@@ -55,13 +55,15 @@
 </template>
 
 <script>
-import { getArticleDetail } from '@/api/article.js'
+import { getArticleDetail, getCommentData } from '@/api/article.js'
 import { followUser, unFollowUser, likeArticle } from '@/api/user.js'
 import componentFooter from '@/components/component_footer.vue'
+
 export default {
   data () {
     return {
-      article: {}
+      article: {},
+      commentData: []
     }
   },
   components: {
@@ -70,8 +72,19 @@ export default {
   async mounted () {
     // 根据id获取文章的详情，实现文章详情的动态渲染
     let res = await getArticleDetail(this.$route.params.id)
-    this.article = res.data.data
-    console.log(this.article)
+    if (res.status === 200) {
+      this.article = res.data.data
+      // 获取文章评论数据
+      let res1 = await getCommentData(this.article.id)
+      console.log(res1)
+      if (res1.status === 200) {
+        this.commentData = res1.data.data.map(value => {
+          // 给图片添加基地址
+          value.user.head_img = localStorage.getItem('mybaseURL') + value.user.head_img
+          return value
+        })
+      }
+    }
   },
   methods: {
     async followAuthor () {
