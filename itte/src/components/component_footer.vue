@@ -86,6 +86,7 @@ div.comment{
     }
 }
 .addcomment {
+  background-color: #fff;
   width: 100vw;
   box-sizing: border-box;
   padding: 10px;

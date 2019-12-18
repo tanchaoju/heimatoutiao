@@ -24,7 +24,7 @@
 <script>
 import { getCateList } from '@/api/cate.js'
 import { getArticleList } from '@/api/article.js'
-import articleblock from '../views/articleBlock.vue'
+import articleblock from '@/components/articleBlock.vue'
 export default {
   data () {
     return {

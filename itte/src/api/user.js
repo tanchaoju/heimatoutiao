@@ -59,3 +59,15 @@ export const collectArticle = (id) => {
     url: `/post_star/${id}`
   })
 }
+// 用户关注列表
+export const followList = (id) => {
+  return axios({
+    url: `/user_follows`
+  })
+}
+// 用户收藏列表
+export const collectList = (id) => {
+  return axios({
+    url: `/user_star`
+  })
+}
