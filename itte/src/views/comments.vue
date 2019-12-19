@@ -13,28 +13,36 @@
           </div>
           <span>回复</span>
         </div>
+         <!-- v-if="item.parent"判断是否有值，有值才传递，防止报错 -->
         <commentItem v-if="item.parent" :comment='item.parent'></commentItem>
         <div class="text">{{item.content}}</div>
       </div>
     </div>
+    <!-- y引入底部评论框部分 -->
+    <componentFooter :article="article"></componentFooter>
   </div>
 </template>
 <script>
+import componentFooter from '@/components/component_footer.vue'
 import myheader from '@/components/myheader.vue'
 import commentItem from '@/components/commentitem.vue'
-import { getCommentData } from '@/api/article.js'
+import { getCommentData, getArticleDetail } from '@/api/article.js'
 export default {
   data () {
     return {
-      commentArr: []
+      commentArr: [],
+      article: {}
     }
   },
   components: {
-    myheader, commentItem
+    myheader, commentItem, componentFooter
   },
   async mounted () {
     // 获取文章id
     let id = this.$route.params.id
+    // 获取文章详情数据
+    let res1 = await getArticleDetail(id)
+    this.article = res1.data.data
     // 获取评论数据
     let res = await getCommentData(id)
     console.log(res)

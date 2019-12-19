@@ -1,5 +1,6 @@
 <template>
      <div class="commentitem">
+         <!-- v-if="comment.parent"判断是否有值，有值才传递，防止报错 -->
          <mycomment v-if="comment.parent" :comment='comment.parent'></mycomment>
         <div class="head">
           <div>
@@ -13,6 +14,7 @@
 </template>
 <script>
 export default {
+  // 递归组件，可以使用name属性在组件内实现递归
   name: 'mycomment',
   props: ['comment']
 }
