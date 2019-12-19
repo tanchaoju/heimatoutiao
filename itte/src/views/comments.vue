@@ -3,23 +3,23 @@
     <myheader title="精彩跟帖">
       <span slot="left" class="iconfont iconjiantou2" @click="$router.back()"></span>
     </myheader>
-    <div class="commentList" v-for='item in commentArr' :key="item.id">
+    <div class="commentList" v-for='comment in commentArr' :key="comment.id">
       <div class="item">
         <div class="head">
-          <img :src="item.user.head_img" alt />
+          <img :src="comment.user.head_img" alt />
           <div>
-            <span>{{item.user.nickname}}</span>
+            <span>{{comment.user.nickname}}</span>
             <span>2小时前</span>
           </div>
-          <span>回复</span>
+          <span @click="replyComment(comment)">回复</span>
         </div>
          <!-- v-if="item.parent"判断是否有值，有值才传递，防止报错 -->
-        <commentItem v-if="item.parent" :comment='item.parent'></commentItem>
-        <div class="text">{{item.content}}</div>
+        <commentItem v-if="comment.parent" :comment='comment.parent'></commentItem>
+        <div class="text">{{comment.content}}</div>
       </div>
     </div>
     <!-- y引入底部评论框部分 -->
-    <componentFooter :article="article"></componentFooter>
+    <componentFooter :article="article" :reply="parentReply"></componentFooter>
   </div>
 </template>
 <script>
@@ -31,7 +31,8 @@ export default {
   data () {
     return {
       commentArr: [],
-      article: {}
+      article: {},
+      parentReply: {}
     }
   },
   components: {
@@ -51,6 +52,12 @@ export default {
         value.user.head_img = localStorage.getItem('mybaseURL') + value.user.head_img
         return value
       })
+    }
+  },
+  methods: {
+    //   点击时将comment传递给子组件component_footer
+    replyComment (comment) {
+      this.parentReply = comment
     }
   }
 }

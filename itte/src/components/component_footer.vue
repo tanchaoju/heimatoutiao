@@ -10,7 +10,7 @@
       <i class="iconfont iconfenxiang"></i>
     </div>
     <div class="inputcomment" v-show='isFocus'>
-        <textarea  ref='commtext' rows="5"></textarea>
+        <textarea  ref='commtext' rows="5" :placeholder="placeholder"></textarea>
         <div>
             <span>发送</span>
             <span @click='isFocus=false'>取消</span>
@@ -22,10 +22,11 @@
 <script>
 import { collectArticle } from '../api/user.js'
 export default {
-  props: ['article'],
+  props: ['article', 'reply'],
   data () {
     return {
-      isFocus: false
+      isFocus: false,
+      placeholder: ''
     }
   },
   methods: {
@@ -41,6 +42,16 @@ export default {
       let res = await collectArticle(this.article.id)
       this.$toast.success(res.data.message)
       this.article.has_star = !this.article.has_star
+    }
+  },
+  watch: {
+    // 监听reply，当reply有数据时，则代表父组件触发了点击事件，并传递了数据。此时通过改变isFocus的值来触发弹窗
+    reply () {
+      if (this.reply) {
+        console.log(this.reply)
+        this.isFocus = true
+        this.placeholder = '@' + this.reply.user.nickname
+      }
     }
   }
 }
