@@ -10,6 +10,7 @@ import Index from '@/views/index.vue'
 import ArticleDetail from '@/views/articleDetail.vue'
 import Myfollow from '@/views/myfollow.vue'
 import Mycollect from '@/views/mycollect.vue'
+import Comments from '@/views/comments.vue'
 
 // 使用use挂载
 Vue.use(VueRouter)
@@ -55,6 +56,11 @@ var router = new VueRouter({
       name: 'mycollect',
       path: '/mycollect',
       component: Mycollect
+    },
+    {
+      name: 'comments',
+      path: '/comments/:id',
+      component: Comments
     }
   ]
 })
