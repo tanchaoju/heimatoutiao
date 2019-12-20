@@ -17,6 +17,7 @@
     <mycell title="我的跟帖" desc="跟帖/回复" ></mycell>
     <mycell title="我的收藏" desc="文章/视频" @click="$router.push({name:'mycollect'})"></mycell>
     <mycell title="设置" desc=''></mycell>
+    <hmbutton text="进入首页" @click="$router.push({name:'index'})"></hmbutton>
     <hmbutton text="退出" @click="exitApp"></hmbutton>
   </div>
 </template>
@@ -55,7 +56,7 @@ export default {
     exitApp () {
       localStorage.removeItem('token')
       localStorage.removeItem('mybaseURL')
-      this.$router.push({ name: 'Index' })
+      this.$router.push({ name: 'login' })
     }
   }
 }

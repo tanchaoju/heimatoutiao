@@ -3,7 +3,7 @@
     <myheader title="精彩跟帖">
       <span slot="left" class="iconfont iconjiantou2" @click="$router.back()"></span>
     </myheader>
-    <div class="commentList" v-for='comment in commentArr' :key="comment.id">
+    <div class="commentList" v-for="comment in commentArr" :key="comment.id">
       <div class="item">
         <div class="head">
           <img :src="comment.user.head_img" alt />
@@ -13,13 +13,20 @@
           </div>
           <span @click="replyComment(comment)">回复</span>
         </div>
-         <!-- v-if="item.parent"判断是否有值，有值才传递，防止报错 -->
-        <commentItem v-if="comment.parent" :comment='comment.parent'></commentItem>
+        <!-- v-if="item.parent"判断是否有值，有值才传递，防止报错 -->
+        <commentItem v-if="comment.parent" :comment="comment.parent" @replyComment="replyComment"></commentItem>
         <div class="text">{{comment.content}}</div>
       </div>
     </div>
     <!-- y引入底部评论框部分 -->
-    <componentFooter :article="article" :reply="parentReply"></componentFooter>
+    <componentFooter
+    :ishow="false"
+    :article="article"
+    :reply="parentReply"
+    @resetValue="parentReply=null"
+    @refresh='updata'
+    ></componentFooter>
+    <div class="footer">亲，没有更多了</div>
   </div>
 </template>
 <script>
@@ -36,25 +43,33 @@ export default {
     }
   },
   components: {
-    myheader, commentItem, componentFooter
+    myheader,
+    commentItem,
+    componentFooter
   },
-  async mounted () {
-    // 获取文章id
-    let id = this.$route.params.id
-    // 获取文章详情数据
-    let res1 = await getArticleDetail(id)
-    this.article = res1.data.data
-    // 获取评论数据
-    let res = await getCommentData(id)
-    console.log(res)
-    if (res.status === 200) {
-      this.commentArr = res.data.data.map(value => {
-        value.user.head_img = localStorage.getItem('mybaseURL') + value.user.head_img
-        return value
-      })
-    }
+  mounted () {
+    this.updata()
   },
   methods: {
+    async  updata () {
+      // 获取文章id
+      let id = this.$route.params.id
+      // 获取文章详情数据
+      let res1 = await getArticleDetail(id)
+      this.article = res1.data.data
+      // 获取评论数据
+      let res = await getCommentData(id, { pageSize: 100 })
+      console.log(res)
+      if (res.status === 200) {
+        this.commentArr = res.data.data.map(value => {
+          value.user.head_img =
+          localStorage.getItem('mybaseURL') + value.user.head_img
+          return value
+        })
+      }
+      // 让评论列表滚动到顶部
+      window.scrollTo(0, 0)
+    },
     //   点击时将comment传递给子组件component_footer
     replyComment (comment) {
       this.parentReply = comment
@@ -64,7 +79,7 @@ export default {
 </script>
 <style lang='less' scoped>
 .commentList {
-//   border-top: 5px solid #ddd;
+  //   border-top: 5px solid #ddd;
   padding: 0 15px;
   .item {
     padding: 10px 0;
@@ -111,5 +126,14 @@ export default {
     margin: 20px auto;
     font-size: 13px;
   }
+}
+.footer{
+  margin:20px auto 70px;
+  height: 30px;
+  border:1px solid #ccc;
+  border-radius: 30px;
+  line-height: 30px;
+  width: 60%;
+  text-align: center
 }
 </style>

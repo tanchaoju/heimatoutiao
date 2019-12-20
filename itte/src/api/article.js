@@ -17,8 +17,18 @@ export const getArticleDetail = (id) => {
 }
 
 // 获取当前文章评论数据ArticleDetail
-export const getCommentData = (id) => {
+export const getCommentData = (id, params) => {
   return axios({
-    url: `/post_comment/${id}`
+    url: `/post_comment/${id}`,
+    params
+  })
+}
+
+// 发布评论
+export const publishComment = (id, data) => {
+  return axios({
+    method: 'post',
+    url: `/post_comment/${id}`,
+    data
   })
 }

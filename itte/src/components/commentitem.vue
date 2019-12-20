@@ -1,13 +1,13 @@
 <template>
      <div class="commentitem">
          <!-- v-if="comment.parent"判断是否有值，有值才传递，防止报错 -->
-         <mycomment v-if="comment.parent" :comment='comment.parent'></mycomment>
+         <mycomment v-if="comment.parent" :comment='comment.parent' @replyComment="huifu"></mycomment>
         <div class="head">
           <div>
             <span>{{comment.user.nickname}}</span>
             <span>2小时前</span>
           </div>
-          <span>回复</span>
+          <span @click="huifu(comment)">回复</span>
         </div>
         <div class="text">{{comment.content}}</div>
       </div>
@@ -16,7 +16,12 @@
 export default {
   // 递归组件，可以使用name属性在组件内实现递归
   name: 'mycomment',
-  props: ['comment']
+  props: ['comment'],
+  methods: {
+    huifu (comment) {
+      this.$emit('replyComment', comment)
+    }
+  }
 }
 </script>
 

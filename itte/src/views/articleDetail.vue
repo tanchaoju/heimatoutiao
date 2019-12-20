@@ -50,7 +50,7 @@
       </div>
       <div class="more">更多跟帖</div>
     </div>
-    <componentFooter :article="article"></componentFooter>
+    <componentFooter :ishow="true" :article="article"></componentFooter>
   </div>
 </template>
 

@@ -50,25 +50,26 @@ export default {
     hmbutton, hminput
   },
   methods: {
-    login (event) {
-      userLogin(this.user)
-        .then(res => {
-          if (res.data.message === '登录成功') {
-            // 将当前的token存储，本地存储
-            localStorage.setItem('token', res.data.data.token)
-            // 存储用户id
-            localStorage.setItem('myId', res.data.data.user.id)
-            // 页面跳转
-            this.$router.push({ path: `/personal/${res.data.data.user.id}` })
-          } else {
-            console.log('1111')
-            this.$toast.fail(res.data.message)
-          }
-        })
-        .catch(err => {
-          console.log(err)
-          this.$toast.fail('登陆失败，请重试')
-        })
+    async login (event) {
+      let res = await userLogin(this.user)
+      console.log(res)
+      // userLogin(this.user)
+      //   .then(res => {
+      if (res.data.message === '登录成功') {
+        // 将当前的token存储，本地存储
+        localStorage.setItem('token', res.data.data.token)
+        // 存储用户id
+        localStorage.setItem('myId', res.data.data.user.id)
+        // 页面跳转
+        this.$router.push({ path: `/personal/${res.data.data.user.id}` })
+      } else {
+        this.$toast.fail(res.data.message)
+      }
+      //   })
+      //   .catch(err => {
+      //     console.log(err)
+      //     this.$toast.fail('登陆失败，请重试')
+      //   })
     },
     handlerinput (data) {
       this.user.username = data

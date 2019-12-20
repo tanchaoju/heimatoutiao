@@ -2,18 +2,18 @@
   <div class="comment">
     <div class="addcomment" v-show='!isFocus'>
       <input type="text" placeholder="写跟帖" @focus="handlerFocus" />
-      <span class="comment"  @click="$router.push({path: `/comments/${article.id}`})">
+      <span v-if="ishow" class="comment"  @click="$router.push({path: `/comments/${article.id}`})">
         <i class="iconfont iconpinglun-"></i>
         <em>{{article.comment_length}}</em>
       </span>
-      <i class="iconfont iconshoucang" @click="collect" :class='{active:article.has_star}'></i>
-      <i class="iconfont iconfenxiang"></i>
+      <i v-if="ishow" class="iconfont iconshoucang" @click="collect" :class='{active:article.has_star}'></i>
+      <i v-if="ishow" class="iconfont iconfenxiang"></i>
     </div>
     <div class="inputcomment" v-show='isFocus'>
-        <textarea  ref='commtext' rows="5" :placeholder="placeholder"></textarea>
+        <textarea  ref='commtext' rows="5" :placeholder="placeholder" ></textarea>
         <div>
-            <span>发送</span>
-            <span @click='isFocus=false'>取消</span>
+            <span @click="releaseCommnet">发送</span>
+            <span @click='cancelReplay'>取消</span>
         </div>
     </div>
   </div>
@@ -21,8 +21,10 @@
 
 <script>
 import { collectArticle } from '../api/user.js'
+import { publishComment } from '../api/article.js'
+
 export default {
-  props: ['article', 'reply'],
+  props: ['article', 'reply', 'ishow'],
   data () {
     return {
       isFocus: false,
@@ -42,6 +44,28 @@ export default {
       let res = await collectArticle(this.article.id)
       this.$toast.success(res.data.message)
       this.article.has_star = !this.article.has_star
+    },
+    cancelReplay () {
+      this.isFocus = false
+      // 在子组件无法重置reply，所以告诉父组件要重置
+      this.$emit('resetValue')
+    },
+    // 发布评论
+    async  releaseCommnet () {
+      // 获取文本域内容
+      let data = { content: this.$refs.commtext.value }
+      // 判断是否是第一个评论
+      if (this.reply) {
+        data.parent_id = this.reply.id
+      }
+      let res = await publishComment(this.article.id, data)
+      if (res.data.message === '评论发布成功') {
+        this.$toast.success(res.data.message)
+        this.$refs.commtext.value = ''
+        this.isFocus = false
+        // 通知父组件进行数据的刷新
+        this.$emit('refresh')
+      }
     }
   },
   watch: {
