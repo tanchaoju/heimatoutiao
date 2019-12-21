@@ -2,7 +2,7 @@
   <div class="index">
     <div class="header">
       <span class="iconfont iconnew icon"></span>
-      <div class="center">
+      <div class="center" @click="$router.push({name:'search'})">
         <van-icon name="search" />&nbsp;&nbsp;&nbsp;搜索商品
       </div>
       <van-icon name="manager-o" class="icon" @click="jump" />

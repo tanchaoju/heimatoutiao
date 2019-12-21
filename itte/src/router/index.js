@@ -11,6 +11,7 @@ import ArticleDetail from '@/views/articleDetail.vue'
 import Myfollow from '@/views/myfollow.vue'
 import Mycollect from '@/views/mycollect.vue'
 import Comments from '@/views/comments.vue'
+import Search from '@/views/search.vue'
 
 // 使用use挂载
 Vue.use(VueRouter)
@@ -61,6 +62,11 @@ var router = new VueRouter({
       name: 'comments',
       path: '/comments/:id',
       component: Comments
+    },
+    {
+      name: 'search',
+      path: '/search',
+      component: Search
     }
   ]
 })
