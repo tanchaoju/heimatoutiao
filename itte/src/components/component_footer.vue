@@ -74,6 +74,9 @@ export default {
       if (this.reply) {
         console.log(this.reply)
         this.isFocus = true
+        setTimeout(() => {
+          this.$refs.commtext.focus()
+        }, 1)
         this.placeholder = '@' + this.reply.user.nickname
       }
     }
