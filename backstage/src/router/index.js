@@ -26,3 +26,18 @@ var router = new VueRouter({
   }]
 })
 export default router
+// 添加导航守卫
+router.beforeEach((to, from, next) => {
+// 判断跳转的页面是否需要验证，除了登录页外其他都需要验证
+  if (to.path === '/login') {
+    next()
+  } else {
+    // 判断是否有token值
+    let token = localStorage.getItem('backstage_token')
+    if (token) {
+      next()
+    } else {
+      next({ path: '/login' })
+    }
+  }
+})

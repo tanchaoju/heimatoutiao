@@ -50,6 +50,8 @@ export default {
           if (res.data.message === '登录成功') {
             // 调用element  Message 消息提示模块进行提示
             this.$message.success(res.data.message)
+            localStorage.setItem('backstage_token', res.data.data.token)
+            this.$router.push({ name: 'index' })
           } else {
             this.$message.error(res.data.message)
           }
