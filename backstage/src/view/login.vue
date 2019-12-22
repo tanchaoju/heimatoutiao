@@ -2,7 +2,7 @@
   <div class="login">
     <div class="container">
       <img src="../assets/qyc.jpg" alt class="avatar" />
-      <el-form ref="form" :model="loginform"  :rules="rules">
+      <el-form ref="loginform" :model="loginform"  :rules="rules">
         <el-form-item prop="username">
           <el-input v-model="loginform.username" placeholder="请输入用户名" prefix-icon="icon-user"></el-input>
         </el-form-item>
@@ -15,13 +15,14 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="login-btn">登录</el-button>
+          <el-button type="primary" class="login-btn" @click="login">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 <script>
+import { userLogin } from '@/api/user.js'
 export default {
   data () {
     return {
@@ -38,6 +39,25 @@ export default {
           { min: 6, max: 16, message: '请输入6~16位的密码', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    login () {
+      this.$refs.loginform.validate(async valid => {
+        if (valid) {
+          // 调用api方法验证登录
+          let res = await userLogin(this.loginform)
+          if (res.data.message === '登录成功') {
+            // 调用element  Message 消息提示模块进行提示
+            this.$message.success(res.data.message)
+          } else {
+            this.$message.error(res.data.message)
+          }
+        } else {
+          console.log('输入不合法')
+          return false
+        }
+      })
     }
   }
 }
