@@ -2,6 +2,7 @@
   <div class="index">
     <el-container>
       <el-aside width="200px">
+          <div class="logo"></div>
         <!-- :unique-opened="true" 只保持一个子菜单的展开 -->
         <el-menu
           :router="true"
@@ -24,7 +25,7 @@
               <i class="el-icon-location"></i>
               <span>文章管理</span>
             </template>
-            <el-menu-item index="2-1">文章列表</el-menu-item>
+            <el-menu-item index="postlist">文章列表</el-menu-item>
             <el-menu-item index="2-2">文章发布</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
