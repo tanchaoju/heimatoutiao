@@ -5,6 +5,7 @@ import Login from '@/view/login.vue'
 import Index from '@/view/index.vue'
 import Welcome from '@/view/welcome.vue'
 import Postlist from '@/view/postlist.vue'
+import PostPublish from '@/view/postPublish.vue'
 
 Vue.use(VueRouter)
 var router = new VueRouter({
@@ -29,7 +30,13 @@ var router = new VueRouter({
       name: 'postlist',
       path: 'postlist',
       component: Postlist
-    }]
+    },
+    {
+      name: 'postPublish',
+      path: 'postPublish',
+      component: PostPublish
+    }
+    ]
   }]
 })
 export default router

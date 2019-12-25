@@ -26,7 +26,7 @@
               <span>文章管理</span>
             </template>
             <el-menu-item index="postlist">文章列表</el-menu-item>
-            <el-menu-item index="2-2">文章发布</el-menu-item>
+            <el-menu-item index="postPublish">文章发布</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
             <template slot="title">
